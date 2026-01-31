@@ -1,0 +1,61 @@
+{
+  "name": "raycast-ai-ask-pepe",
+  "title": "AI Ask with Pepe",
+  "description": "Ask AI questions using Google Gemini API",
+  "icon": "command-icon.png",
+  "author": "Your Name",
+  "license": "MIT",
+  "keywords": ["ai", "pepe", "gemini", "google"],
+  "type": "module",
+  "commands": [
+    {
+      "name": "pepe",
+      "title": "Ask Pepe",
+      "description": "Ask a question to Pepe AI",
+      "mode": "view",
+      "icon": "pepe-icon.png",
+      "arguments": [
+        {
+          "name": "question",
+          "placeholder": "Ask me anything...",
+          "type": "text",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "preferences": [
+    {
+      "name": "geminiApiKey",
+      "label": "Gemini API Key",
+      "description": "Your Google Gemini API key",
+      "type": "password",
+      "required": true
+    },
+    {
+      "name": "model",
+      "label": "Model",
+      "description": "Gemini model to use",
+      "type": "textfield",
+      "default": "gemini-2.0-flash",
+      "required": false
+    }
+  ],
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "@raycast/api": "^1.82.0"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^1.0.8",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "eslint": "^8.0.0",
+    "eslint-plugin-react": "^7.0.0",
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "build": "ray build -e dist",
+    "dev": "ray develop",
+    "lint": "eslint ."
+  }
+}

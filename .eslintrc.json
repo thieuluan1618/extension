@@ -1,0 +1,6 @@
+{
+  "extends": ["@raycast/eslint-config"],
+  "rules": {
+    "react-hooks/exhaustive-deps": "off"
+  }
+}
