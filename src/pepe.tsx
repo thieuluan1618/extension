@@ -6,6 +6,7 @@ import {
   Toast,
   Clipboard,
   LaunchProps,
+  Icon,
   popToRoot,
 } from "@raycast/api";
 import { useState, useEffect } from "react";
@@ -26,8 +27,6 @@ export default function Ask(props: LaunchProps<{ arguments: Arguments }>) {
 
     async function fetchResponse() {
       try {
-        console.log("Question received:", question);
-        
         await showToast({
           style: Toast.Style.Animated,
           title: "Asking Pepe...",
@@ -36,7 +35,6 @@ export default function Ask(props: LaunchProps<{ arguments: Arguments }>) {
         const result = await askGemini(question);
         
         if (!cancelled) {
-          console.log("Response received:", result?.substring(0, 100));
           setResponse(result);
           await showToast({
             style: Toast.Style.Success,
@@ -44,7 +42,6 @@ export default function Ask(props: LaunchProps<{ arguments: Arguments }>) {
           });
         }
       } catch (err) {
-        console.error("Error:", err);
         const errorMessage = err instanceof Error ? err.message : String(err);
         if (!cancelled) {
           setError(errorMessage);
@@ -72,7 +69,7 @@ export default function Ask(props: LaunchProps<{ arguments: Arguments }>) {
 
   const markdown = error 
     ? `## Error\n\n${error}` 
-    : response || `## Loading...\n\nAsking about: "${question}"`;
+    : response || `*Asking about: "${question}"...*`;
 
   return (
     <Detail
@@ -83,6 +80,8 @@ export default function Ask(props: LaunchProps<{ arguments: Arguments }>) {
           {response && (
             <Action
               title="Copy Response"
+              icon={Icon.Clipboard}
+              shortcut={{ modifiers: ["cmd"], key: "c" }}
               onAction={async () => {
                 await Clipboard.copy(response);
                 await showToast({
@@ -94,6 +93,8 @@ export default function Ask(props: LaunchProps<{ arguments: Arguments }>) {
           )}
           <Action
             title="Ask Another Question"
+            icon={Icon.Message}
+            shortcut={{ modifiers: ["cmd"], key: "return" }}
             onAction={() => popToRoot()}
           />
         </ActionPanel>
