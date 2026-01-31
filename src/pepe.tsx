@@ -1,140 +1,103 @@
-import { useState } from "react";
 import {
   Detail,
-  List,
   ActionPanel,
   Action,
   showToast,
   Toast,
   Clipboard,
+  LaunchProps,
+  popToRoot,
 } from "@raycast/api";
+import { useState, useEffect } from "react";
 import { askGemini } from "./utils/gemini";
 
-export default function Ask() {
-  const [question, setQuestion] = useState("");
-  const [response, setResponse] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [showResult, setShowResult] = useState(false);
+interface Arguments {
+  question: string;
+}
 
-  const handleSubmit = async (q: string) => {
-    if (!q.trim()) {
-      showToast({
-        style: Toast.Style.Failure,
-        title: "Error",
-        message: "Please enter a question",
-      });
-      return;
+export default function Ask(props: LaunchProps<{ arguments: Arguments }>) {
+  const { question } = props.arguments;
+  const [response, setResponse] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function fetchResponse() {
+      try {
+        console.log("Question received:", question);
+        
+        await showToast({
+          style: Toast.Style.Animated,
+          title: "Asking Pepe...",
+        });
+
+        const result = await askGemini(question);
+        
+        if (!cancelled) {
+          console.log("Response received:", result?.substring(0, 100));
+          setResponse(result);
+          await showToast({
+            style: Toast.Style.Success,
+            title: "Response received",
+          });
+        }
+      } catch (err) {
+        console.error("Error:", err);
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        if (!cancelled) {
+          setError(errorMessage);
+          await showToast({
+            style: Toast.Style.Failure,
+            title: "Error",
+            message: errorMessage,
+          });
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
     }
 
-    setIsLoading(true);
-    setQuestion(q);
-
-    try {
-      showToast({
-        style: Toast.Style.Animated,
-        title: "Asking AI...",
-      });
-
-      const result = await askGemini(q);
-      setResponse(result);
-      setShowResult(true);
-
-      showToast({
-        style: Toast.Style.Success,
-        title: "Success",
-        message: "Response received",
-      });
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      showToast({
-        style: Toast.Style.Failure,
-        title: "Error",
-        message: errorMessage,
-      });
-      setShowResult(false);
-    } finally {
-      setIsLoading(false);
+    if (question) {
+      fetchResponse();
     }
-  };
 
-  if (showResult && response) {
-    return (
-      <Detail
-        markdown={response}
-        actions={
-          <ActionPanel>
+    return () => {
+      cancelled = true;
+    };
+  }, [question]);
+
+  const markdown = error 
+    ? `## Error\n\n${error}` 
+    : response || `## Loading...\n\nAsking about: "${question}"`;
+
+  return (
+    <Detail
+      isLoading={isLoading}
+      markdown={markdown}
+      actions={
+        <ActionPanel>
+          {response && (
             <Action
               title="Copy Response"
               onAction={async () => {
                 await Clipboard.copy(response);
-                showToast({
+                await showToast({
                   style: Toast.Style.Success,
                   title: "Copied to clipboard",
                 });
               }}
             />
-            <Action
-              title="Ask Another Question"
-              onAction={() => {
-                setShowResult(false);
-                setResponse("");
-                setQuestion("");
-              }}
-            />
-          </ActionPanel>
-        }
-      />
-    );
-  }
-
-  return (
-    <List
-      isLoading={isLoading}
-      searchBarPlaceholder="Ask me anything..."
-      onSearchTextChange={setQuestion}
-      searchText={question}
-    >
-      {showResult && response && (
-        <List.Item
-          title="Response"
-          detail={<List.Item.Detail markdown={response} />}
-          actions={
-            <ActionPanel>
-              <Action
-                title="Copy Response"
-                onAction={async () => {
-                  await Clipboard.copy(response);
-                  showToast({
-                    style: Toast.Style.Success,
-                    title: "Copied to clipboard",
-                  });
-                }}
-              />
-              <Action
-                title="Ask Another Question"
-                onAction={() => {
-                  setShowResult(false);
-                  setResponse("");
-                  setQuestion("");
-                }}
-              />
-            </ActionPanel>
-          }
-        />
-      )}
-      {!showResult && (
-        <List.Item
-          title="Press Enter to Ask"
-          actions={
-            <ActionPanel>
-              <Action
-                title="Ask AI"
-                onAction={() => handleSubmit(question)}
-              />
-            </ActionPanel>
-          }
-        />
-      )}
-    </List>
+          )}
+          <Action
+            title="Ask Another Question"
+            onAction={() => popToRoot()}
+          />
+        </ActionPanel>
+      }
+    />
   );
 }

@@ -14,6 +14,9 @@ importers:
       '@raycast/api':
         specifier: ^1.82.0
         version: 1.104.3(@types/node@20.19.30)(@types/react@18.3.27)
+      '@raycast/utils':
+        specifier: ^2.2.2
+        version: 2.2.2(@raycast/api@1.104.3(@types/node@20.19.30)(@types/react@18.3.27))(react@19.0.0)
     devDependencies:
       '@raycast/eslint-config':
         specifier: ^1.0.8
@@ -417,6 +420,15 @@ packages:
     peerDependencies:
       eslint: '>=7'
 
+  '@raycast/utils@2.2.2':
+    resolution: {integrity: sha512-tZcyWCHZvz4L/i1CGEnSZkBoK6wwX1pzlTKjcWWugbrQyG0QCMOxjKJfRC/iNkD+hHaqhMWUj4Y0LNo/NknvFw==}
+    peerDependencies:
+      '@raycast/api': '>=1.99.4'
+      react: '>=19.0.0'
+    peerDependenciesMeta:
+      react:
+        optional: true
+
   '@rushstack/eslint-patch@1.15.0':
     resolution: {integrity: sha512-ojSshQPKwVvSMR8yT2L/QtUkV5SXi/IfDiJ4/8d6UbTPjiHVmxZzUAzGD8Tzks1b9+qQkZa0isUOvYObedITaw==}
 
@@ -694,6 +706,10 @@ packages:
   define-properties@1.2.1:
     resolution: {integrity: sha512-8QmQKqEASLd5nx0U1B1okLElbUuuttJ/AnYmRXbbbGDWh6uS208EjD4Xqq/I9wK7u0v6O08XhTWnt5XtEbR6Dg==}
     engines: {node: '>= 0.4'}
+
+  dequal@2.0.3:
+    resolution: {integrity: sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==}
+    engines: {node: '>=6'}
 
   dir-glob@3.0.1:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
@@ -1911,6 +1927,13 @@ snapshots:
       - supports-color
       - typescript
 
+  '@raycast/utils@2.2.2(@raycast/api@1.104.3(@types/node@20.19.30)(@types/react@18.3.27))(react@19.0.0)':
+    dependencies:
+      '@raycast/api': 1.104.3(@types/node@20.19.30)(@types/react@18.3.27)
+      dequal: 2.0.3
+    optionalDependencies:
+      react: 19.0.0
+
   '@rushstack/eslint-patch@1.15.0': {}
 
   '@types/json-schema@7.0.15': {}
@@ -2253,6 +2276,8 @@ snapshots:
       define-data-property: 1.1.4
       has-property-descriptors: 1.0.2
       object-keys: 1.1.1
+
+  dequal@2.0.3: {}
 
   dir-glob@3.0.1:
     dependencies:

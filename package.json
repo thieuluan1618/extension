@@ -5,7 +5,12 @@
   "icon": "command-icon.png",
   "author": "Your Name",
   "license": "MIT",
-  "keywords": ["ai", "pepe", "gemini", "google"],
+  "keywords": [
+    "ai",
+    "pepe",
+    "gemini",
+    "google"
+  ],
   "type": "module",
   "commands": [
     {
@@ -43,7 +48,8 @@
   ],
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
-    "@raycast/api": "^1.82.0"
+    "@raycast/api": "^1.82.0",
+    "@raycast/utils": "^2.2.2"
   },
   "devDependencies": {
     "@raycast/eslint-config": "^1.0.8",
