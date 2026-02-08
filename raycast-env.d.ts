@@ -11,7 +11,11 @@ type ExtensionPreferences = {
   /** undefined - Your Google Gemini API key */
   "geminiApiKey": string,
   /** undefined - Gemini model to use */
-  "model": string
+  "model": string,
+  /** undefined - Your ElevenLabs API key for text-to-speech */
+  "elevenLabsApiKey"?: string,
+  /** undefined - Voice ID to use (default: George) */
+  "elevenLabsVoiceId": string
 }
 
 /** Preferences accessible in all the extension's commands */

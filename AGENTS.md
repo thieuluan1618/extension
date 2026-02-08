@@ -2,7 +2,7 @@
 
 ## Quick Commands
 - **Build**: `pnpm build` (compiles TypeScript, bundles extension)
-- **Dev**: `pnpm dev` (hot-reload during development)
+- **Dev**: ``pnpm dev`` (hot-reload during development)
 - **Lint**: `pnpm lint` (ESLint check, no autofix)
 - **Lint Fix**: `pnpm lint --fix` (autofix ESLint issues)
 
@@ -17,6 +17,8 @@
 - Google Search grounding for real-time web info
 - Current date/time awareness in system prompt
 - Casual/friendly personality with Vietnamese support
+- Multi-turn conversation with Gemini chat history API
+- ElevenLabs TTS with streaming playback via mpv
   
 ## Code Style
 - **Language**: TypeScript strict mode (React + Raycast components)

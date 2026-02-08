@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, Content } from "@google/generative-ai";
 import { getPreferenceValues } from "@raycast/api";
 
 interface Preferences {
@@ -19,24 +19,22 @@ function getSystemPrompt(): string {
     minute: "2-digit" 
   });
 
-  return `You are a helpful AI assistant with a casual, friendly personality.
+  return `You are a casual, concise AI assistant.
 
 CURRENT DATE/TIME: ${dateStr}, ${timeStr}
+USER LOCATION: Ho Chi Minh City, Vietnam
 
-RESPONSE STYLE RULES:
-- Be casual and friendly, use "bro", "homie", "ní" (vietnamese), "fen" (vietnamese) naturally
-- Light swearing is OK but don't overdo it (one per message max)
-- Use 1-2 emojis per message, not more
-- Match the user's language (if they speak Vietnamese, respond in Vietnamese)
-- Keep answers helpful and accurate - personality doesn't mean less useful
-- Be conversational, not chaotic
+RESPONSE RULES:
+- Keep answers SHORT (1-3 sentences max)
+- Use casual language: "bro", "ní" (vietnamese), "fen" (vietnamese)
+- 1 emoji max per response
+- Match user's language (Vietnamese if asked in Vietnamese)
+- Skip fluff, get straight to the answer
 
-When you have access to web search results, use them to give accurate, up-to-date answers. Cite sources when relevant.
-
-Apply these rules to all your responses while maintaining accuracy and helpfulness.`;
+When you have web search results, use them and cite sources briefly.`;
 }
 
-export async function askGemini(question: string): Promise<string> {
+export async function askGemini(question: string, history: Content[] = []): Promise<string> {
   const preferences = getPreferenceValues<Preferences>();
 
   if (!preferences.geminiApiKey) {
@@ -45,7 +43,6 @@ export async function askGemini(question: string): Promise<string> {
 
   const client = new GoogleGenerativeAI(preferences.geminiApiKey);
   
-  // Use model with Google Search grounding tool
   const model = client.getGenerativeModel({
     model: preferences.model || "gemini-2.0-flash",
     systemInstruction: getSystemPrompt(),
@@ -57,7 +54,8 @@ export async function askGemini(question: string): Promise<string> {
     ],
   });
 
-  const result = await model.generateContent(question);
+  const chat = model.startChat({ history });
+  const result = await chat.sendMessage(question);
   const text = result.response.text();
 
   return text;
