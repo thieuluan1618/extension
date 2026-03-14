@@ -1,12 +1,12 @@
 # Ask Pepe - Raycast AI Extension
 
-A Raycast extension that lets you ask questions to Pepe AI (powered by Google Gemini) directly from Raycast with real-time web search capabilities and ElevenLabs text-to-speech.
+A Raycast extension that lets you ask questions to Pepe AI (powered by Google Gemini via Vertex AI) with streaming responses and ElevenLabs text-to-speech.
 
 ## Features
 
 - 🐸 Casual, friendly AI assistant with personality
-- 🔍 Built-in Google Search grounding for real-time info
-- 💬 Multi-turn conversation with proper chat history
+- ⚡ Streaming responses (real-time text rendering)
+- 💬 Multi-turn conversation with chat history
 - 🔊 Text-to-speech via ElevenLabs (streaming playback with mpv)
 - 🇻🇳 Vietnamese language support
 
@@ -19,14 +19,15 @@ A Raycast extension that lets you ask questions to Pepe AI (powered by Google Ge
 ### Requirements
 
 - [mpv](https://mpv.io/) - Required for streaming TTS playback (`brew install mpv`)
+- A GCP service account JSON key with Vertex AI access
 
 ## Setup
 
-1. Get your Gemini API key from [Google AI Studio](https://aistudio.google.com/apikey)
-2. (Optional) Get your ElevenLabs API key from [ElevenLabs](https://elevenlabs.io/)
-3. Open Raycast and type "Ask Pepe"
-4. Enter your API keys when prompted
-5. (Optional) Change the model or voice ID in extension preferences
+1. Create a GCP service account with the **Vertex AI User** role
+2. Download the JSON key and place it at `assets/vertex-ai-client.json`
+3. (Optional) Get your ElevenLabs API key from [ElevenLabs](https://elevenlabs.io/)
+4. Open Raycast and type "Ask Pepe"
+5. (Optional) Change the model, region, or voice ID in extension preferences
 
 ## Usage
 
@@ -46,8 +47,9 @@ A Raycast extension that lets you ask questions to Pepe AI (powered by Google Ge
 
 | Preference | Description | Required |
 |---|---|---|
-| Gemini API Key | Google Gemini API key | Yes |
-| Model | Gemini model (default: `gemini-2.0-flash`) | No |
+| GCP Project ID | Google Cloud project ID (auto-detected from credentials if not set) | No |
+| GCP Location | Vertex AI region (default: `us-central1`) | No |
+| Model | Vertex AI model (default: `gemini-2.5-flash-lite`) | No |
 | ElevenLabs API Key | ElevenLabs API key for TTS | No |
 | ElevenLabs Voice ID | Voice to use (default: George) | No |
 
