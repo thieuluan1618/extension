@@ -8,9 +8,11 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
 type ExtensionPreferences = {
-  /** undefined - Your Google Gemini API key */
-  "geminiApiKey": string,
-  /** undefined - Gemini model to use */
+  /** undefined - Your Google Cloud project ID. If not set, will be read from GOOGLE_APPLICATION_CREDENTIALS file. */
+  "gcpProjectId"?: string,
+  /** undefined - Region for Vertex AI (e.g., us-central1) */
+  "gcpLocation": string,
+  /** undefined - Vertex AI model to use */
   "model": string,
   /** undefined - Your ElevenLabs API key for text-to-speech */
   "elevenLabsApiKey"?: string,

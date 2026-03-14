@@ -4,3 +4,8 @@ dist
 *.log
 .env
 .env.local
+vertex-ai-client.json
+assets/vertex-ai-client.json
+test-vertex.ts
+benchmark-vertex.ts
+accuracy-test.ts

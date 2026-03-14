@@ -31,18 +31,26 @@
   ],
   "preferences": [
     {
-      "name": "geminiApiKey",
-      "label": "Gemini API Key",
-      "description": "Your Google Gemini API key",
-      "type": "password",
-      "required": true
+      "name": "gcpProjectId",
+      "label": "GCP Project ID (optional)",
+      "description": "Your Google Cloud project ID. If not set, will be read from GOOGLE_APPLICATION_CREDENTIALS file.",
+      "type": "textfield",
+      "required": false
+    },
+    {
+      "name": "gcpLocation",
+      "label": "GCP Location",
+      "description": "Region for Vertex AI (e.g., us-central1)",
+      "type": "textfield",
+      "default": "us-central1",
+      "required": false
     },
     {
       "name": "model",
       "label": "Model",
-      "description": "Gemini model to use",
+      "description": "Vertex AI model to use",
       "type": "textfield",
-      "default": "gemini-2.0-flash",
+      "default": "gemini-2.5-flash-lite",
       "required": false
     },
     {
@@ -63,7 +71,7 @@
   ],
   "dependencies": {
     "@elevenlabs/elevenlabs-js": "^2.34.0",
-    "@google/generative-ai": "^0.21.0",
+    "@google-cloud/vertexai": "^1.10.0",
     "@raycast/api": "^1.82.0",
     "@raycast/utils": "^2.2.2"
   },

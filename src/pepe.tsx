@@ -11,8 +11,8 @@ import {
   popToRoot,
 } from "@raycast/api";
 import { useState, useEffect, useRef } from "react";
-import { Content } from "@google/generative-ai";
-import { askGemini } from "./utils/gemini";
+import { streamGemini } from "./utils/gemini";
+import type { VertexMessage } from "./utils/gemini";
 import { speakText } from "./utils/elevenlabs";
 
 interface Arguments {
@@ -24,7 +24,7 @@ interface Message {
   content: string;
 }
 
-function toGeminiHistory(messages: Message[]): Content[] {
+function toVertexHistory(messages: Message[]): VertexMessage[] {
   return messages.map((m) => ({
     role: m.role === "user" ? "user" : "model",
     parts: [{ text: m.content }],
@@ -61,11 +61,15 @@ export default function Ask(props: LaunchProps<{ arguments: Arguments }>) {
     setIsLoading(true);
 
     try {
-      const history = toGeminiHistory(currentMessages);
-      const result = await askGemini(text, history);
+      const history = toVertexHistory(currentMessages);
 
-      const assistantMessage: Message = { role: "assistant", content: result };
-      setMessages([...newMessages, assistantMessage]);
+      // Add placeholder assistant message for streaming
+      const streamingMessages = [...newMessages, { role: "assistant" as const, content: "" }];
+      setMessages(streamingMessages);
+
+      await streamGemini(text, history, (chunk) => {
+        setMessages([...newMessages, { role: "assistant", content: chunk }]);
+      });
 
       await showToast({
         style: Toast.Style.Success,
@@ -86,7 +90,7 @@ export default function Ask(props: LaunchProps<{ arguments: Arguments }>) {
   const conversationMarkdown = messages
     .map(
       (m) =>
-        `**${m.role === "user" ? "You" : "🤖 Pepe"}:**\n${m.content}`
+        `**${m.role === "user" ? "You" : "😌 Pepe"}:**\n${m.content}`
     )
     .join("\n\n---\n\n");
 
